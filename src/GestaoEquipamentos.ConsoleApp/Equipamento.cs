@@ -14,6 +14,7 @@
             Console.WriteLine($"Nome: {this.nome}\nNumero de série: {this.numeroSerie}");
             Console.WriteLine($"Fabricante: {this.fabricante}\nData de fabricação: {this.data}");
             Console.WriteLine($"Preço: R${this.preco}");
+            Console.WriteLine("------------------------");
         }
 
         public string RetornaNome() {

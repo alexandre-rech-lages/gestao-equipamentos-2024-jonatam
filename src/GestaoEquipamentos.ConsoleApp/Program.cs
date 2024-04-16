@@ -49,16 +49,24 @@
 
                             switch (menuSecundario) {
                                 case 1:
-                                    //string numeroSerie, string fabricante, double preco, string data)
+
                                     Console.Clear();
                                     Console.WriteLine("Gestão de Equipamentos\n");
 
                                     nomeEquipamento = ReceberInformacao("Informe o nome do equipamento: ");
+
                                     if (nomeEquipamento.Length < 6) {
                                         Console.WriteLine("O nome deve possuir ao menos 6 caracteres!");
                                         Console.ReadKey();
                                         continue;
                                     }
+
+                                    //Evita duplicação de equipamentos
+                                    if (inventario.EquipamentoExiste(nomeEquipamento)) {
+                                        Console.WriteLine("Já existe um equipamento com esse nome!");
+                                        break;
+                                    }
+
                                     numeroSerie = ReceberInformacao("Informe o numero de serie do equipamento: ");
                                     fabricante = ReceberInformacao("Informe o nome do fabricante: ");
                                     valorEquipamento = double.Parse(ReceberInformacao("Informe o preço do equipamento: "));
@@ -71,6 +79,11 @@
                                     break;
 
                                 case 2:
+                                    if (inventario.ListaEstaVazia()) {
+                                        Console.WriteLine("O inventário não possui nenhum equipamento!");
+                                        Console.ReadKey();
+                                        break;
+                                    }
                                     Console.Clear();
                                     Console.WriteLine("Gestão de Equipamentos\n");
 
@@ -79,6 +92,11 @@
                                     break;
 
                                 case 3:
+                                    if (inventario.ListaEstaVazia()) {
+                                        Console.WriteLine("O inventário não possui nenhum equipamento!");
+                                        Console.ReadKey();
+                                        break;
+                                    }
                                     Console.Clear();
                                     Console.WriteLine("Gestão de Equipamentos\n");
 
@@ -94,6 +112,7 @@
                                         equipamento = new Equipamento(nomeEquipamento, numeroSerie, fabricante, valorEquipamento, dataFabricacao);
 
                                         inventario.EditarEquipamento(nomeEquipamentoParaTrocar, equipamento);
+                                        AvisoColorido("Equipamento modificado com sucesso!");
                                         Console.ReadKey();
                                     }
                                     else {
@@ -103,6 +122,11 @@
                                     break;
 
                                 case 4:
+                                    if (inventario.ListaEstaVazia()) {
+                                        Console.WriteLine("O inventário não possui nenhum equipamento!");
+                                        Console.ReadKey();
+                                        break;
+                                    }
                                     Console.Clear();
                                     Console.WriteLine("Gestão de Equipamentos\n");
 
@@ -110,6 +134,8 @@
 
                                     if (inventario.EquipamentoExiste(nomeEquipamentoParaTrocar)) {
                                         inventario.RemoverEquipamento(nomeEquipamentoParaTrocar);
+
+                                        AvisoColorido("Equipamento removido com sucesso!");
                                         Console.ReadKey();
                                     }
                                     else {
@@ -133,8 +159,21 @@
         }
 
         static string ReceberInformacao(string textoApresentado) {
-            Console.WriteLine(textoApresentado);
-            return Console.ReadLine();
+            string informacao = "";
+            while (informacao.Length == 0) {
+                Console.Clear();
+                Console.WriteLine("Gestão de Equipamentos\n");
+                Console.WriteLine(textoApresentado);
+                informacao = Console.ReadLine();
+            }
+
+            return informacao;
+        }
+
+        static void AvisoColorido(string texto) {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(texto);
+            Console.ForegroundColor = ConsoleColor.White;
         }
     }
 }
