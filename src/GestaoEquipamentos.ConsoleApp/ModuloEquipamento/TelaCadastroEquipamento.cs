@@ -48,16 +48,12 @@
 
             if (repositorioEquipamento.EquipamentoExiste(nomeEquipamentoParaTrocar))
             {
-                string nomeEquipamento = ReceberInformacao("Informe o nome do equipamento: ");
-                string numeroSerie = ReceberInformacao("Informe o número de série do equipamento: ");
-                string fabricante = ReceberInformacao("Informe o nome do fabricante: ");
-                double valorEquipamento = double.Parse(ReceberInformacao("Informe o preço do equipamento: "));
-                string dataFabricacao = ReceberInformacao("Informe a data de fabricação do equipamento: ");
-
-                Equipamento equipamento = new Equipamento(nomeEquipamento, numeroSerie, fabricante, valorEquipamento, dataFabricacao);
+                Equipamento equipamento = ObterEquipamento();
 
                 repositorioEquipamento.EditarEquipamento(nomeEquipamentoParaTrocar, equipamento);
+
                 AvisoColorido("Equipamento modificado com sucesso!");
+                
                 Console.ReadKey();
             }
             else
@@ -84,21 +80,34 @@
         public void InserirEquipamento()
         {
             Console.Clear();
-            Console.WriteLine("Gestão de Equipamentos\n");
+            Console.WriteLine("Gestão de Equipamentos\n");                      
 
-            string nomeEquipamento = ReceberInformacao("Informe o nome do equipamento: ");
+            Equipamento equipamento = ObterEquipamento();
 
-            if (nomeEquipamento.Length < 6)
-            {
-                Notificador.ApresentarMensagem("O nome deve possuir ao menos 6 caracteres!", ConsoleColor.Red);
-                return;
-            }
-
-            //Evita duplicação de equipamentos
-            if (repositorioEquipamento.EquipamentoExiste(nomeEquipamento))
+            if (repositorioEquipamento.EquipamentoExiste(equipamento.RetornaNome()))
             {
                 Notificador.ApresentarMensagem("Já existe um equipamento com esse nome!", ConsoleColor.Red);
                 return;
+            }
+
+            bool inseriu = repositorioEquipamento.InserirEquipamento(equipamento);
+
+            if (inseriu)
+                Notificador.ApresentarMensagem("Equipamento adicionado com sucesso!", ConsoleColor.Green);
+        }
+
+        private Equipamento ObterEquipamento()
+        {
+            string nomeEquipamento;
+
+            while (true)
+            {
+                nomeEquipamento = ReceberInformacao("Informe o nome do equipamento: ");
+
+                if (nomeEquipamento.Length > 6)                
+                    break;                                    
+
+                Notificador.ApresentarMensagem("O nome deve possuir ao menos 6 caracteres!", ConsoleColor.Red);
             }
 
             string numeroSerie = ReceberInformacao("Informe o número de série do equipamento: ");
@@ -108,10 +117,7 @@
 
             Equipamento equipamento = new Equipamento(nomeEquipamento, numeroSerie, fabricante, valorEquipamento, dataFabricacao);
 
-            bool inseriu = repositorioEquipamento.InserirEquipamento(equipamento);
-
-            if (inseriu)
-                Notificador.ApresentarMensagem("Equipamento adicionado com sucesso!", ConsoleColor.Green);
+            return equipamento;
         }
 
         public int ApresentarSubmenu()
